@@ -1,0 +1,106 @@
+<section>
+    <div class="flex">
+        <h1 class="title">Reactive Form</h1>
+        <form (ngSubmit)="onSubmit($event)" [formGroup]="form" novalidate>
+            <div class="field">
+                <label class="label" for="username">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input
+                        [class.is-danger]="usernameFieldInvalid"
+                        [class.is-success]="usernameFieldIsValid"
+                        class="input"
+                        formControlName="username"
+                        id="username"
+                        type="text"/>
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                     </span>
+                    <span *ngIf="usernameFieldIsValid; else elseUsernameField" class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <ng-template #elseUsernameField>
+                         <span class="icon is-small is-right">
+                             <i class="fas fa-times"></i>
+                         </span>
+                    </ng-template>
+                </div>
+                <div *ngIf="usernameFieldInvalid">
+                    <p *ngIf="usernameField.hasError('required')" class="help is-danger">Username is required</p>
+                    <p *ngIf="usernameField.hasError('maxlength')" class="help is-danger"> User name max length 12 characters</p>
+                    <p *ngIf="usernameField.hasError('minlength')" class="help is-danger"> User name min length 3 characters</p>
+                </div>
+            </div>
+            <div class="field" formArrayName="emails">
+                <label class="label" for="email">Email</label>
+                <div
+                    *ngFor="let email of emailsFormArray.controls; let i = index"
+                    class="control has-icons-left has-icons-right mb-5">
+                    <div>
+
+                        <input [class.is-danger]="oneEmailInvalid(i)"
+                               [class.is-success]="oneEmailValid(i)"
+                               [formControlName]="i"
+                               [placeholder]="'Email' + (i + 1)"
+                               autocomplete="email"
+                               class="input"
+                               id="email"
+                               type="email"/>
+                        <button (click)="removeEmailsControl(i)"
+                                class="button is-danger ml-3"
+                                type="button">X
+                        </button>
+                    </div>
+                    <span class="icon is-small is-left">
+                         <i class="fas fa-at"></i>
+                    </span>
+
+                    <span *ngIf="emailFieldIsValid; else elseEmailField" class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <ng-template #elseEmailField>
+                        <span class="icon is-small is-right">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </ng-template>
+                    <div *ngIf="oneEmailInvalid(i)">
+                        <p *ngIf="oneEmailInvalid(i)" class="help is-danger">Please enter a correct email</p>
+                    </div>
+                </div>
+                <button (click)="addEmailsControl()"
+                        class="button is-success"
+                        type="button">Add Emails
+                </button>
+            </div>
+            <div class="field">
+                <label class="label" for="password">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input [class.is-danger]="passwordInvalid"
+                           [class.is-success]="passwordIsValid"
+                           class="input"
+                           formControlName="password"
+                           id="password"
+                           type="password">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-key"></i>
+                    </span>
+                    <span *ngIf="passwordIsValid; else elsePasswordField" class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <ng-template #elsePasswordField>
+                        <span class="icon is-small is-right">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div *ngIf="passwordInvalid">
+                <p *ngIf="passwordField.hasError('hasSmallCase')" class="help is-danger">Password require at least one letter</p>
+                <p *ngIf="passwordField.hasError('hasNumber')" class="help is-danger"> Password require at least one number</p>
+            </div>
+            <button [disabled]="form.invalid"
+                    class="button is-success my-3"
+                    type="submit">Submit
+            </button>
+        </form>
+    </div>
+</section>
